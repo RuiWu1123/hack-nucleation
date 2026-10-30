@@ -1,0 +1,14 @@
+# Secrets
+.env
+
+# Training outputs and analysis outputs
+runs/
+analysis/seed_sweep/*.json
+analysis/seed_sweep/data/
+analysis/seed_sweep/textfeat*/
+wandb/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
