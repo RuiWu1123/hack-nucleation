@@ -77,6 +77,9 @@ class TaskAgentLoop(AgentLoopBase):
         with simple_timer("generate_sequences", metrics):
             output, token_ids, response_mask, response_logprobs = await self._task_rollout(prompt_ids, sampling_params, priority)
         response_ids = token_ids[len(prompt_ids):]
+        # With thinking disabled the chat template closes an empty thinking block in the prompt, so the whole
+        # response is the answer; the grader only grades text after `</think>`, so restore the tag for it
+        thinking_closed_in_prompt = self.think_end_id in prompt_ids[-4:]
         if metrics.get("num_preempted") is None:
             metrics["num_preempted"] = output.num_preempted if output.num_preempted is not None else -1
         result = AgentLoopOutput(
@@ -92,7 +95,7 @@ class TaskAgentLoop(AgentLoopBase):
         result.extra_fields.update({
             "turn_scores": [],
             "tool_rewards": [],
-            "task_response_text": self.tokenizer.decode(response_ids),
+            "task_response_text": ("</think>" if thinking_closed_in_prompt else "") + self.tokenizer.decode(response_ids),
             "task_truncated": len(output.token_ids) >= self.task_max_tokens,
             "thinking_forced": output.extra_fields["thinking_forced"],
         })

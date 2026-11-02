@@ -83,6 +83,14 @@ RUN_NAME=rl_4b N_GPUS=4 POLICY_MODEL=Qwen/Qwen3.5-4B TOTAL_STEPS=124 bash script
 For Qwen3.5-2B add `+data.apply_chat_template_kwargs.enable_thinking=True` (its chat template defaults to
 non-thinking). Runs write rollouts, validation dumps and checkpoints to `runs/<RUN_NAME>/`.
 
+A much cheaper setup, not the one of the seed sweep: Qwen3.5-0.8B in non-thinking mode with 2048-token responses
+on one GPU (about 2 h for 124 steps on an H200). In this setup the empty-stub hack takes off within about ten
+steps.
+
+```bash
+RUN_NAME=rl_0p8b_seed1 bash scripts/train_0p8b_1gpu.sh actor_rollout_ref.rollout.seed=1
+```
+
 ## Analysis
 
 ```bash

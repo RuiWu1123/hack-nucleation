@@ -3,6 +3,7 @@
 
 # Training outputs and analysis outputs
 runs/
+.cache/
 analysis/seed_sweep/*.json
 analysis/seed_sweep/data/
 analysis/seed_sweep/textfeat*/
